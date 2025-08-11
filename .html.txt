@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SUPREME FOUNDATION VOLUNTEER DATA ENTRY</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #e6f4ea; /* Light green-beige background for nature theme */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            padding: 2rem 0;
+        }
+        .container {
+            background-color: #f8f8f0; /* Creamy background for the form */
+            padding: 2.5rem;
+            border-radius: 1.5rem; /* Soft rounded corners */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            max-width: 95%;
+            width: 800px;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem; /* Reduced gap for more compact form */
+            border: 1px solid #d4e7d4; /* Subtle green border */
+        }
+        .form-section {
+            padding-bottom: 1.5rem; /* Reduced padding */
+            border-bottom: 1px solid #c8e6c9; /* Lighter green separator */
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem; /* Reduced gap for more compact form */
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.4rem; /* Reduced margin */
+            font-weight: 600;
+            color: #388e3c; /* Darker green for labels */
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.6rem 0.9rem; /* Slightly reduced padding */
+            border: 1px solid #a5d6a7; /* Medium green border */
+            border-radius: 0.6rem; /* Slightly reduced border-radius */
+            background-color: #ffffff; /* White input background */
+            font-size: 0.95rem; /* Slightly reduced font size */
+            color: #2e7d32; /* Dark green text */
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #66bb6a; /* Lighter green focus */
+            box-shadow: 0 0 0 3px rgba(102, 187, 106, 0.4); /* Green glow on focus */
+        }
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 1.5rem; /* Reduced margin */
+        }
+        .action-button {
+            padding: 0.7rem 1.4rem; /* Slightly reduced padding */
+            border-radius: 0.7rem; /* Slightly reduced border-radius */
+            font-weight: 600;
+            transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .action-button:hover {
+            transform: translateY(-2px);
+        }
+        .submit-button {
+            background-color: #4caf50; /* Green 500 */
+            color: white;
+        }
+        .submit-button:hover {
+            background-color: #388e3c; /* Darker green */
+        }
+        .clear-form-button {
+            background-color: #8d6e63; /* Brown 500 */
+            color: white;
+        }
+        .clear-form-button:hover {
+            background-color: #6d4c41; /* Darker brown */
+        }
+        .remove-button {
+            background-color: #f44336; /* Red 500 */
+            color: white;
+        }
+        .remove-button:hover {
+            background-color: #d32f2f; /* Darker red */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-section">
+            <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">SUPREME FOUNDATION VOLUNTEER DATA ENTRY</h1>
+            
+            <!-- Search & Load Entry Section -->
+            <div class="form-section">
+                <h2 class="text-2xl font-bold text-gray-700 mb-4 text-center">Search & Load Entry</h2>
+                <div class="form-grid">
+                    <div class="form-group col-span-full">
+                        <label for="searchSrNumber">SR NUMBER (FOR SEARCH/UPDATE):</label>
+                        <input type="text" id="searchSrNumber" name="searchSrNumber" placeholder="Enter SR Number to search">
+                    </div>
+                    <div class="button-group col-span-full justify-center">
+                        <button type="button" class="action-button submit-button" onclick="pullData()">Pull Data</button>
+                        <button type="button" class="action-button remove-button" onclick="removeEntry()">Remove Entry</button>
+                    </div>
+                </div>
+            </div>
+            <!-- End Search & Load Entry Section -->
+
+            <form id="volunteerForm" class="form-grid">
+                <!-- Hidden input to store the row index for updates -->
+                <input type="hidden" id="rowIndexToUpdate" value="">
+
+                <div class="form-group">
+                    <label for="name">NAME:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="fathersName">FATHER'S NAME:</label>
+                    <input type="text" id="fathersName" name="fathersName">
+                </div>
+                <div class="form-group">
+                    <label for="status">STATUS:</label>
+                    <select id="status" name="status">
+                        <option value="">Select</option>
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="level">LEVEL:</label>
+                    <select id="level" name="level">
+                        <option value="">Select</option>
+                        <option value="Class 1-5">Class 1-5 </option>
+                        <option value="Class 6-8">Class 6-8 </option>
+                        <option value="Class 9-10">Class 9-10 </option>
+                        <option value="Class 11-12">Class 11-12 </option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="subject">SUBJECT:</label>
+                    <select id="subject" name="subject">
+                        <option value="">Select</option>
+                        <option value="HINDI">HINDI</option>
+                        <option value="ENGLISH">ENGLISH</option>
+                        <option value="MATHEMATICS">MATHEMATICS</option>
+                        <option value="SOCIAL SCIENCE">SOCIAL SCIENCE</option>
+                        <option value="SCIENCE">SCIENCE</option>
+                        <option value="SANSKRIT">SANSKRIT</option>
+                        <option value="ACCOUNTANCY">ACCOUNTANCY</option>
+                        <option value="BUSS.ADM.">BUSS.ADM.</option>
+                        <option value="CHEMISTRY">CHEMISTRY</option>
+                        <option value="PHYSICS">PHYSICS</option>
+                        <option value="BIOLOGY">BIOLOGY</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="workingSchool">WORKING SCHOOL:</label>
+                    <select id="workingSchool" name="workingSchool">
+                        <option value="">Select</option>
+                        <option value="BDR01 SETH JUHARMAL SETHIA GOVT. SENIOR SECONDARY SCHOOL CHARWAS (215469)">BDR01 SETH JUHARMAL SETHIA GOVT. SENIOR SECONDARY SCHOOL CHARWAS (215469)</option>
+                        <option value="BDR02 GOVT. SENIOR SECONDARY SCHOOL BALERA (215471)">BDR02 GOVT. SENIOR SECONDARY SCHOOL BALERA (215471)</option>
+                        <option value="BDR03 GOVT. SENIOR SECONDARY SCHOOL LUHARA (215472)">BDR03 GOVT. SENIOR SECONDARY SCHOOL LUHARA (215472)</option>
+                        <option value="BDR04 GOVT. SENIOR SECONDARY SCHOOL SARANGSAR (215473)">BDR04 GOVT. SENIOR SECONDARY SCHOOL SARANGSAR (215473)</option>
+                        <option value="BDR05 GOVT. SENIOR SECONDARY SCHOOL DHANI KUMHARAN (215480)">BDR05 GOVT. SENIOR SECONDARY SCHOOL DHANI KUMHARAN (215480)</option>
+                        <option value="BDR06 GOVT. SENIOR SECONDARY SCHOOL DHANI KALERAN (215481)">BDR06 GOVT. SENIOR SECONDARY SCHOOL DHANI KALERAN (215481)</option>
+                        <option value="BDR07 GOVT. SENIOR SECONDARY SCHOOL PARAWA (215484)">BDR07 GOVT. SENIOR SECONDARY SCHOOL PARAWA (215484)</option>
+                        <option value="BDR08 GOVT. SENIOR SECONDARY SCHOOL PAREWARA (215485)">BDR08 GOVT. SENIOR SECONDARY SCHOOL PAREWARA (215485)</option>
+                        <option value="BDR09 GOVT. SENIOR SECONDARY SCHOOL DUNKAR (215486)">BDR09 GOVT. SENIOR SECONDARY SCHOOL DUNKAR (215486)</option>
+                        <option value="BDR10 GOVT. SENIOR SECONDARY SCHOOL BENATHA JOGALIA (215487)">BDR10 GOVT. SENIOR SECONDARY SCHOOL BENATHA JOGALIA (215487)</option>
+                        <option value="BDR100 GOVT. PRIMARY SCHOOL KALOTHAR PARAWA (465123)">BDR100 GOVT. PRIMARY SCHOOL KALOTHAR PARAWA (465123)</option>
+                        <option value="BDR101 GOVT. UPPER PRIMARY SCHOOL HEMASAR ATHUNA (465144)">BDR101 GOVT. UPPER PRIMARY SCHOOL HEMASAR ATHUNA (465144)</option>
+                        <option value="BDR102 GOVT. UPPER PRIMARY SCHOOL NIMALA DHOURA SADU CHHOTI (465560)">BDR102 GOVT. UPPER PRIMARY SCHOOL NIMALA DHOURA SADU CHHOTI (465560)</option>
+                        <option value="BDR103 GOVT. PRIMARY SCHOOL SIDHO KI DHANI UNTALAR (474825)">BDR103 GOVT. PRIMARY SCHOOL SIDHO KI DHANI UNTALAR (474825)</option>
+                        <option value="BDR104 GOVT. PRIMARY SCHOOL MAHIYO KI DHANI SADU BADI (474837)">BDR104 GOVT. PRIMARY SCHOOL MAHIYO KI DHANI SADU BADI (474837)</option>
+                        <option value="BDR105 GOVT. UPPER PRIMARY SCHOOL SONIYASAR UDAYKARNOTAN (474859)">BDR105 GOVT. UPPER PRIMARY SCHOOL SONIYASAR UDAYKARNOTAN (474859)</option>
+                        <option value="BDR106 GOVT. UPPER PRIMARY SCHOOL SUNADITAL UNTALAD (474872)">BDR106 GOVT. UPPER PRIMARY SCHOOL SUNADITAL UNTALAD (474872)</option>
+                        <option value="BDR107 GOVT. PRIMARY SCHOOL DHANI RAWLI (474873)">BDR107 GOVT. PRIMARY SCHOOL DHANI RAWLI (474873)</option>
+                        <option value="BDR108 GOVT. PRIMARY SCHOOL UTARADI ROHI SAJANSAR (474884)">BDR108 GOVT. PRIMARY SCHOOL UTARADI ROHI SAJANSAR (474884)</option>
+                        <option value="BDR109 GOVT. PRIMARY SCHOOL RATNADIYA JOHAR SANDWA (476782)">BDR109 GOVT. PRIMARY SCHOOL RATNADIYA JOHAR SANDWA (476782)</option>
+                        <option value="BDR11 GOVT. SENIOR SECONDARY SCHOOL GHANTIYAL BADI (215488)">BDR11 GOVT. SENIOR SECONDARY SCHOOL GHANTIYAL BADI (215488)</option>
+                        <option value="BDR110 GOVT. UPPER PRIMARY SCHOOL KESOLAI SANDWA (476783)">BDR110 GOVT. UPPER PRIMARY SCHOOL KESOLAI SANDWA (476783)</option>
+                        <option value="BDR111 GOVT. UPPER PRIMARY SCHOOL BHOMPURA (476785)">BDR111 GOVT. UPPER PRIMARY SCHOOL BHOMPURA (476785)</option>
+                        <option value="BDR112 GOVT. PRIMARY SCHOOL SIMARON KI DHANI (476793)">BDR112 GOVT. PRIMARY SCHOOL SIMARON KI DHANI (476793)</option>
+                        <option value="BDR113 MAHATMA GANDHI GOVT. SCHOOL SANDWA (476806)">BDR113 MAHATMA GANDHI GOVT. SCHOOL SANDWA (476806)</option>
+                        <option value="BDR114 GOVT. SENIOR SECONDARY SCHOOL BHATOLAI SANDWA (476808)">BDR114 GOVT. SENIOR SECONDARY SCHOOL BHATOLAI SANDWA (476808)</option>
+                        <option value="BDR115 GOVT. UPPER PRIMARY SCHOOL SADU BADI (476926)">BDR115 GOVT. UPPER PRIMARY SCHOOL SADU BADI (476926)</option>
+                        <option value="BDR116 GOVT. PRIMARY SCHOOL DHANI SINWRAN (477504)">BDR116 GOVT. PRIMARY SCHOOL DHANI SINWRAN (477504)</option>
+                        <option value="BDR117 GOVT. PRIMARY SCHOOL DHANI SABANA SARANGSAR (478676)">BDR117 GOVT. PRIMARY SCHOOL DHANI SABANA SARANGSAR (478676)</option>
+                        <option value="BDR118 GOVT. UPPER PRIMARY SCHOOL MALASAR (495004)">BDR118 GOVT. UPPER PRIMARY SCHOOL MALASAR (495004)</option>
+                        <option value="BDR119 GOVT. PRIMARY SCHOOL JAJRO KI DHANI LALGARH (495024)">BDR119 GOVT. PRIMARY SCHOOL JAJRO KI DHANI LALGARH (495024)</option>
+                        <option value="BDR12 GOVT. SENIOR SECONDARY SCHOOL DHIGARIA (215489)">BDR12 GOVT. SENIOR SECONDARY SCHOOL DHIGARIA (215489)</option>
+                        <option value="BDR120 GOVT. SENIOR SECONDARY SCHOOL MANPURA (495027)">BDR120 GOVT. SENIOR SECONDARY SCHOOL MANPURA (495027)</option>
+                        <option value="BDR121 GOVT. PRIMARY SCHOOL DHANI PANDUKIYA (495033)">BDR121 GOVT. PRIMARY SCHOOL DHANI PANDUKIYA (495033)</option>
+                        <option value="BDR122 GOVT. PRIMARY SCHOOL ALAI JOHAR BIDASAR (495037)">BDR122 GOVT. PRIMARY SCHOOL ALAI JOHAR BIDASAR (495037)</option>
+                        <option value="BDR123 GOVT. UPPER PRIMARY SCHOOL NO 2 BIDASAR (495038)">BDR123 GOVT. UPPER PRIMARY SCHOOL NO 2 BIDASAR (495038)</option>
+                        <option value="BDR124 GOVT. PRIMARY SCHOOL KHUMANA BIDASAR (495041)">BDR124 GOVT. PRIMARY SCHOOL KHUMANA BIDASAR (495041)</option>
+                        <option value="BDR125 GOVT. PRIMARY SCHOOL DHANI JHARELA NABBASAR (495044)">BDR125 GOVT. PRIMARY SCHOOL DHANI JHARELA NABBASAR (495044)</option>
+                        <option value="BDR126 GOVT. PRIMARY SCHOOL DUNADIYA LUHARA (495055)">BDR126 GOVT. PRIMARY SCHOOL DUNADIYA LUHARA (495055)</option>
+                        <option value="BDR127 GOVT. PRIMARY SCHOOL NOLAI TAL ASRASAR (495132)">BDR127 GOVT. PRIMARY SCHOOL NOLAI TAL ASRASAR (495132)</option>
+                        <option value="BDR128 GOVT. PRIMARY SCHOOL LAKHANA JOHAR DHADHERU BHAMUWAN (495245)">BDR128 GOVT. PRIMARY SCHOOL LAKHANA JOHAR DHADHERU BHAMUWAN (495245)</option>
+                        <option value="BDR129 GOVT. UPPER PRIMARY SCHOOL GOGLAI TALAI JYAK (495389)">BDR129 GOVT. UPPER PRIMARY SCHOOL GOGLAI TALAI JYAK (495389)</option>
+                        <option value="BDR13 LAXMI NARAYAN TAPARIYA GOVT. SENIOR SECONDARY SCHOOL SANDWA (215490)">BDR13 LAXMI NARAYAN TAPARIYA GOVT. SENIOR SECONDARY SCHOOL SANDWA (215490)</option>
+                        <option value="BDR130 MAHATMA GANDHI GOVT. SCHOOL RAMNAGAR BASTI JOGALSAR (495390)">BDR130 MAHATMA GANDHI GOVT. SCHOOL RAMNAGAR BASTI JOGALSAR (495390)</option>
+                        <option value="BDR131 GOVT. PRIMARY SCHOOL DHANI GOVANDA JOGALSAR (495391)">BDR131 GOVT. PRIMARY SCHOOL DHANI GOVANDA JOGALSAR (495391)</option>
+                        <option value="BDR132 GOVT. PRIMARY SCHOOL DHOLPALIYA DHER (495396)">BDR132 GOVT. PRIMARY SCHOOL DHOLPALIYA DHER (495396)</option>
+                        <option value="BDR133 GOVT. PRIMARY SCHOOL DHANI DEVALI (495397)">BDR133 GOVT. PRIMARY SCHOOL DHANI DEVALI (495397)</option>
+                        <option value="BDR134 GOVT. SENIOR SECONDARY SCHOOL DHANI SWAMIYAN (495398)">BDR134 GOVT. SENIOR SECONDARY SCHOOL DHANI SWAMIYAN (495398)</option>
+                        <option value="BDR135 GOVT. PRIMARY SCHOOL DHANI GADHWAL (495400)">BDR135 GOVT. PRIMARY SCHOOL DHANI GADHWAL (495400)</option>
+                        <option value="BDR136 GOVT. PRIMARY SCHOOL DHANI KANKARNADIYA (495678)">BDR136 GOVT. PRIMARY SCHOOL DHANI KANKARNADIYA (495678)</option>
+                        <option value="BDR137 GOVT. PRIMARY SCHOOL DHANI DHOLTI BENATHA JOGLIYA (495691)">BDR137 GOVT. PRIMARY SCHOOL DHANI DHOLTI BENATHA JOGLIYA (495691)</option>
+                        <option value="BDR138 GOVT. PRIMARY SCHOOL DANDLAV DHADHERU GODARAN (495729)">BDR138 GOVT. PRIMARY SCHOOL DANDLAV DHADHERU GODARAN (495729)</option>
+                        <option value="BDR139 MAHATMA GANDHI GOVT. SCHOOL BHOM PAREWARA (495788)">BDR139 MAHATMA GANDHI GOVT. SCHOOL BHOM PAREWARA (495788)</option>
+                        <option value="BDR14 SHAHEED RIFALMAN INDRASINGH GOVT. SENIOR SECONDARY SCHOOL BAMBU (215500)">BDR14 SHAHEED RIFALMAN INDRASINGH GOVT. SENIOR SECONDARY SCHOOL BAMBU (215500)</option>
+                        <option value="BDR140 GOVT. PRIMARY SCHOOL CHAK PAREVADA (495798)">BDR140 GOVT. PRIMARY SCHOOL CHAK PAREVADA (495798)</option>
+                        <option value="BDR141 GOVT. PRIMARY SCHOOL KOTHINADA (495804)">BDR141 GOVT. PRIMARY SCHOOL KOTHINADA (495804)</option>
+                        <option value="BDR142 GOVT. PRIMARY SCHOOL MEGHWAL BASTI CHARWAS (495833)">BDR142 GOVT. PRIMARY SCHOOL MEGHWAL BASTI CHARWAS (495833)</option>
+                        <option value="BDR143 GOVT. PRIMARY SCHOOL NAIYON KI DHANI KOTHINADA (495843)">BDR143 GOVT. PRIMARY SCHOOL NAIYON KI DHANI KOTHINADA (495843)</option>
+                        <option value="BDR144 GOVT. PRIMARY SCHOOL GHANTIYAL CHHOTI (495851)">BDR144 GOVT. PRIMARY SCHOOL GHANTIYAL CHHOTI (495851)</option>
+                        <option value="BDR145 GOVT. UPPER PRIMARY SCHOOL RUPELI (501614)">BDR145 GOVT. UPPER PRIMARY SCHOOL RUPELI (501614)</option>
+                        <option value="BDR146 GOVT. PRIMARY SCHOOL RAJEEV BASTI SARANGSAR (506151)">BDR146 GOVT. PRIMARY SCHOOL RAJEEV BASTI SARANGSAR (506151)</option>
+                        <option value="BDR147 GOVT. UPPER PRIMARY SCHOOL DHANI KAMADIYA SANDWA (526751)">BDR147 GOVT. UPPER PRIMARY SCHOOL DHANI KAMADIYA SANDWA (526751)</option>
+                        <option value="BDR148 GOVT. PRIMARY SCHOOL WARD NO.1 BIDASAR (526848)">BDR148 GOVT. PRIMARY SCHOOL WARD NO.1 BIDASAR (526848)</option>
+                        <option value="BDR149 GOVT. PRIMARY SCHOOL CHAK CHADWAS (526862)">BDR149 GOVT. PRIMARY SCHOOL CHAK CHADWAS (526862)</option>
+                        <option value="BDR15 MAHATMA GANDHI GOVT. SCHOOL BAIRASAR (215501)">BDR15 MAHATMA GANDHI GOVT. SCHOOL BAIRASAR (215501)</option>
+                        <option value="BDR150 GOVT. UPPER PRIMARY SCHOOL BAIRASAR (526931)">BDR150 GOVT. UPPER PRIMARY SCHOOL BAIRASAR (526931)</option>
+                        <option value="BDR151 GOVT. PRIMARY SCHOOL LOON SINGH KI DHANI INYARA (529631)">BDR151 GOVT. PRIMARY SCHOOL LOON SINGH KI DHANI INYARA (529631)</option>
+                        <option value="BDR152 GOVT. PRIMARY SCHOOL UNTALADBDR16 GOVT. SENIOR SECONDARY SCHOOL UNTALAD (215502)">BDR152 GOVT. PRIMARY SCHOOL UNTALADBDR16 GOVT. SENIOR SECONDARY SCHOOL UNTALAD (215502)</option>
+                        <option value="BDR17 GOVT. SENIOR SECONDARY SCHOOL GONDUSAR (215503)">BDR17 GOVT. SENIOR SECONDARY SCHOOL GONDUSAR (215503)</option>
+                        <option value="BDR18 GOVT. SENIOR SECONDARY SCHOOL SADU BADI (215504)">BDR18 GOVT. SENIOR SECONDARY SCHOOL SADU BADI (215504)</option>
+                        <option value="BDR19 GOVT. SENIOR SECONDARY SCHOOL GIRWARSAR BIDASAR CHURU (215505)">BDR19 GOVT. SENIOR SECONDARY SCHOOL GIRWARSAR BIDASAR CHURU (215505)</option>
+                        <option value="BDR20 GOVT. SENIOR SECONDARY SCHOOL SAJANSAR (215506)">BDR20 GOVT. SENIOR SECONDARY SCHOOL SAJANSAR (215506)</option>
+                        <option value="BDR21 GOVT. SENIOR SECONDARY SCHOOL REDA (215507)">BDR21 GOVT. SENIOR SECONDARY SCHOOL REDA (215507)</option>
+                        <option value="BDR22 GOVT. SENIOR SECONDARY SCHOOL AMARSAR (215508)">BDR22 GOVT. SENIOR SECONDARY SCHOOL AMARSAR (215508)</option>
+                        <option value="BDR23 GOVT. SENIOR SECONDARY SCHOOL KANDHALSAR (215509)">BDR23 GOVT. SENIOR SECONDARY SCHOOL KANDHALSAR (215509)</option>
+                        <option value="BDR24 GOVT. SENIOR SECONDARY SCHOOL TEHANDESAR (215510)">BDR24 GOVT. SENIOR SECONDARY SCHOOL TEHANDESAR (215510)</option>
+                        <option value="BDR25 GOVT. SENIOR SECONDARY SCHOOL KATAR CHHOTI (215511)">BDR25 GOVT. SENIOR SECONDARY SCHOOL KATAR CHHOTI (215511)</option>
+                        <option value="BDR26 GOVT. SENIOR SECONDARY SCHOOL KATAR BADI (215512)">BDR26 GOVT. SENIOR SECONDARY SCHOOL KATAR BADI (215512)</option>
+                        <option value="BDR27 GOVT. SENIOR SECONDARY SCHOOL BADSAR (215513)">BDR27 GOVT. SENIOR SECONDARY SCHOOL BADSAR (215513)</option>
+                        <option value="BDR28 GOVT. SENIOR SECONDARY SCHOOL NOHARIA (215514)">BDR28 GOVT. SENIOR SECONDARY SCHOOL NOHARIA (215514)</option>
+                        <option value="BDR29 GOVT. SENIOR SECONDARY SCHOOL JOGALSAR (215515)">BDR29 GOVT. SENIOR SECONDARY SCHOOL JOGALSAR (215515)</option>
+                        <option value="BDR30 GOVT. SENIOR SECONDARY SCHOOL KALYANSAR CHURU (215516)">BDR30 GOVT. SENIOR SECONDARY SCHOOL KALYANSAR CHURU (215516)</option>
+                        <option value="BDR31 GOVT. SENIOR SECONDARY SCHOOL JYAK (215517)">BDR31 GOVT. SENIOR SECONDARY SCHOOL JYAK (215517)</option>
+                        <option value="BDR32 GOVT. SENIOR SECONDARY SCHOOL NABBASAR (215518)">BDR32 GOVT. SENIOR SECONDARY SCHOOL NABBASAR (215518)</option>
+                        <option value="BDR33 GOVT. GIRLS SENIOR SECONDARY SCHOOL LALGARH (215519)">BDR33 GOVT. GIRLS SENIOR SECONDARY SCHOOL LALGARH (215519)</option>
+                        <option value="BDR34 SHAHEED RAJENDRA SINGH GOVT. SENIOR SECONDARY SCHOOL LALGARH (215520)">BDR34 SHAHEED RAJENDRA SINGH GOVT. SENIOR SECONDARY SCHOOL LALGARH (215520)</option>
+                        <option value="BDR35 GOVT. SENIOR SECONDARY SCHOOL INYARA (215521)">BDR35 GOVT. SENIOR SECONDARY SCHOOL INYARA (215521)</option>
+                        <option value="BDR36 GOVT. SENIOR SECONDARY SCHOOL BHANWARI DEVI SUTHAR (215535)">BDR36 GOVT. SENIOR SECONDARY SCHOOL BHANWARI DEVI SUTHAR (215535)</option>
+                        <option value="BDR37 SHRI KHUBCHAND BANTHIYA GOVT. SENIOR SECONDARY SCHOOL ENGLISH MEDIUM BIDASAR CHURU RAJ. (215536)">BDR37 SHRI KHUBCHAND BANTHIYA GOVT. SENIOR SECONDARY SCHOOL ENGLISH MEDIUM BIDASAR CHURU RAJ. (215536)</option>
+                        <option value="BDR38 SETH DULICHAND SETHIYA GOVT. SENIOR SECONDARY SCHOOL BIDASAR (215537)">BDR38 SETH DULICHAND SETHIYA GOVT. SENIOR SECONDARY SCHOOL BIDASAR (215537)</option>
+                        <option value="BDR40 SMT DHAPU DEVI CHAURADIYA GOVT. GIRLS SENIOR SECONDARY SCHOOL BIDASAR (215539)">BDR40 SMT DHAPU DEVI CHAURADIYA GOVT. GIRLS SENIOR SECONDARY SCHOOL BIDASAR (215539)</option>
+                        <option value="BDR41 GOVT. SENIOR SECONDARY SCHOOL DHADHERU BHAMUWAN (215542)">BDR41 GOVT. SENIOR SECONDARY SCHOOL DHADHERU BHAMUWAN (215542)</option>
+                        <option value="BDR42 GOVT. SENIOR SECONDARY SCHOOL DUNGRAS ATHUNA (215543)">BDR42 GOVT. SENIOR SECONDARY SCHOOL DUNGRAS ATHUNA (215543)</option>
+                        <option value="BDR43 GOVT. SENIOR SECONDARY SCHOOL UDWALA (215545)">BDR43 GOVT. SENIOR SECONDARY SCHOOL UDWALA (215545)</option>
+                        <option value="BDR44 GOVT. PRIMARY SCHOOL DHANI SERDIA (400299)">BDR44 GOVT. PRIMARY SCHOOL DHANI SERDIA (400299)</option>
+                        <option value="BDR45 GOVT. GIRLS UPPER PRIMARY SCHOOL DHADHERU BHAMUWAN (400311)">BDR45 GOVT. GIRLS UPPER PRIMARY SCHOOL DHADHERU BHAMUWAN (400311)</option>
+                        <option value="BDR46 GOVT. PRIMARY SCHOOL KELGRAM DHADHERU (400334)">BDR46 GOVT. PRIMARY SCHOOL KELGRAM DHADHERU (400334)</option>
+                        <option value="BDR47 GOVT. PRIMARY SCHOOL DHANI NADIYA HEMASAR ATHUNA (400469)">BDR47 GOVT. PRIMARY SCHOOL DHANI NADIYA HEMASAR ATHUNA (400469)</option>
+                        <option value="BDR48 GOVT. PRIMARY SCHOOL PATHOLAI INYARA (400502)">BDR48 GOVT. PRIMARY SCHOOL PATHOLAI INYARA (400502)</option>
+                        <option value="BDR49 GOVT. GIRLS UPPER PRIMARY SCHOOL WARD NO.11 DHANI KUMHARAN (400735)">BDR49 GOVT. GIRLS UPPER PRIMARY SCHOOL WARD NO.11 DHANI KUMHARAN (400735)</option>
+                        <option value="BDR50 MAHATMA GANDHI GOVT. SCHOOL NO. 1 BIDASAR (400945)">BDR50 MAHATMA GANDHI GOVT. SCHOOL NO. 1 BIDASAR (400945)</option>
+                        <option value="BDR51 GOVT. PRIMARY SCHOOL CHAK DARIBA (401165)">BDR51 GOVT. PRIMARY SCHOOL CHAK DARIBA (401165)</option>
+                        <option value="BDR52 GOVT. UPPER PRIMARY SCHOOL DHORAN KI DHANI (401167)">BDR52 GOVT. UPPER PRIMARY SCHOOL DHORAN KI DHANI (401167)</option>
+                        <option value="BDR53 GOVT. PRIMARY SCHOOL DELWANA TAL INYARA (405539)">BDR53 GOVT. PRIMARY SCHOOL DELWANA TAL INYARA (405539)</option>
+                        <option value="BDR54 GOVT. PRIMARY SCHOOL HADLAI TAL IYARA (405540)">BDR54 GOVT. PRIMARY SCHOOL HADLAI TAL IYARA (405540)</option>
+                        <option value="BDR55 GOVT. PRIMARY SCHOOL BHOM INYARA (405541)">BDR55 GOVT. PRIMARY SCHOOL BHOM INYARA (405541)</option>
+                        <option value="BDR56 GOVT. PRIMARY SCHOOL JINANA TAL INYARA (405542)">BDR56 GOVT. PRIMARY SCHOOL JINANA TAL INYARA (405542)</option>
+                        <option value="BDR57 GOVT. UPPER PRIMARY SCHOOL BETALAB DHIGARIA (405544)">BDR57 GOVT. UPPER PRIMARY SCHOOL BETALAB DHIGARIA (405544)</option>
+                        <option value="BDR58 GOVT. GIRLS UPPER PRIMARY SCHOOL GGUPS CHARWAS (405547)">BDR58 GOVT. GIRLS UPPER PRIMARY SCHOOL GGUPS CHARWAS (405547)</option>
+                        <option value="BDR59 GOVT. PRIMARY SCHOOL ARBALANA (405549)">BDR59 GOVT. PRIMARY SCHOOL ARBALANA (405549)</option>
+                        <option value="BDR60 GOVT. GIRLS SENIOR SECONDARY SCHOOL KHATNADIA BIDASAR (405554)">BDR60 GOVT. GIRLS SENIOR SECONDARY SCHOOL KHATNADIA BIDASAR (405554)</option>
+                        <option value="BDR61 GOVT. UPPER PRIMARY SCHOOL BHOM SADU (405556)">BDR61 GOVT. UPPER PRIMARY SCHOOL BHOM SADU (405556)</option>
+                        <option value="BDR62 GOVT. PRIMARY SCHOOL DHANI GOGANA BAINATHA JOGLIYA (405557)">BDR62 GOVT. PRIMARY SCHOOL DHANI GOGANA BAINATHA JOGLIYA (405557)</option>
+                        <option value="BDR63 GOVT. PRIMARY SCHOOL RATANADIA DUNKAR (405558)">BDR63 GOVT. PRIMARY SCHOOL RATANADIA DUNKAR (405558)</option>
+                        <option value="BDR64 GOVT. UPPER PRIMARY SCHOOL EALKA DHORA (405561)">BDR64 GOVT. UPPER PRIMARY SCHOOL EALKA DHORA (405561)</option>
+                        <option value="BDR65 GOVT. PRIMARY SCHOOL BHAIRUNJI KA RASTA HEMASAR ATHUNA (405564)">BDR65 GOVT. PRIMARY SCHOOL BHAIRUNJI KA RASTA HEMASAR ATHUNA (405564)</option>
+                        <option value="BDR66 GOVT. PRIMARY SCHOOL DHANI SULTAN SINGH MANPURA (405590)">BDR66 GOVT. PRIMARY SCHOOL DHANI SULTAN SINGH MANPURA (405590)</option>
+                        <option value="BDR67 GOVT. PRIMARY SCHOOL NARAKHANDIA TAL ASRASAR (405631)">BDR67 GOVT. PRIMARY SCHOOL NARAKHANDIA TAL ASRASAR (405631)</option>
+                        <option value="BDR68 GOVT. UPPER PRIMARY SCHOOL NADA TALAI BAMBU (405640)">BDR68 GOVT. UPPER PRIMARY SCHOOL NADA TALAI BAMBU (405640)</option>
+                        <option value="BDR69 GOVT. PRIMARY SCHOOL RAYKO KI DHANI KATAR CHHOTI (405881)">BDR69 GOVT. PRIMARY SCHOOL RAYKO KI DHANI KATAR CHHOTI (405881)</option>
+                        <option value="BDR70 GOVT. PRIMARY SCHOOL SHAYAM TALAI (405887)">BDR70 GOVT. PRIMARY SCHOOL SHAYAM TALAI (405887)</option>
+                        <option value="BDR71 GOVT. PRIMARY SCHOOL KALYANSAR (405889)">BDR71 GOVT. PRIMARY SCHOOL KALYANSAR (405889)</option>
+                        <option value="BDR72 GOVT. PRIMARY SCHOOL DHANI GONANATAL KALYANSAR (405890)">BDR72 GOVT. PRIMARY SCHOOL DHANI GONANATAL KALYANSAR (405890)</option>
+                        <option value="BDR73 GOVT. PRIMARY SCHOOL MEGHWALON KI DHANI SHIVPURI KATAR CHHOTI (405892)">BDR73 GOVT. PRIMARY SCHOOL MEGHWALON KI DHANI SHIVPURI KATAR CHHOTI (405892)</option>
+                        <option value="BDR74 GOVT. PRIMARY SCHOOL HAPPANA TAAL RAMDEVRA BIDASAR (406788)">BDR74 GOVT. PRIMARY SCHOOL HAPPANA TAAL RAMDEVRA BIDASAR (406788)</option>
+                        <option value="BDR75 GOVT. PRIMARY SCHOOL DHANI KHALA UNTALAR (406871)">BDR75 GOVT. PRIMARY SCHOOL DHANI KHALA UNTALAR (406871)</option>
+                        <option value="BDR76 GOVT. PRIMARY SCHOOL BENATHA UPADHIA (407086)">BDR76 GOVT. PRIMARY SCHOOL BENATHA UPADHIA (407086)</option>
+                        <option value="BDR77 GOVT. UPPER PRIMARY SCHOOL CHHINPALI TALAI UDWALA (407149)">BDR77 GOVT. UPPER PRIMARY SCHOOL CHHINPALI TALAI UDWALA (407149)</option>
+                        <option value="BDR78 GOVT. PRIMARY SCHOOL DHANI ADBANA SAJANSAR (409497)">BDR78 GOVT. PRIMARY SCHOOL DHANI ADBANA SAJANSAR (409497)</option>
+                        <option value="BDR79 GOVT. PRIMARY SCHOOL MEGHWALON KI DHANI LALGARH (409717)">BDR79 GOVT. PRIMARY SCHOOL MEGHWALON KI DHANI LALGARH (409717)</option>
+                        <option value="BDR80 GOVT. PRIMARY SCHOOL KARNADI LALGARH (409735)">BDR80 GOVT. PRIMARY SCHOOL KARNADI LALGARH (409735)</option>
+                        <option value="BDR81 GOVT. PRIMARY SCHOOL DHANI RAVATAN DUNGRAS ATHUNA (409746)">BDR81 GOVT. PRIMARY SCHOOL DHANI RAVATAN DUNGRAS ATHUNA (409746)</option>
+                        <option value="BDR82 GOVT. PRIMARY SCHOOL NAYA BASS DHIGARIA (410032)">BDR82 GOVT. PRIMARY SCHOOL NAYA BASS DHIGARIA (410032)</option>
+                        <option value="BDR83 GOVT. PRIMARY SCHOOL SHIVPURI KATAR CHHOTI (410042)">BDR83 GOVT. PRIMARY SCHOOL SHIVPURI KATAR CHHOTI (410042)</option>
+                        <option value="BDR84 GOVT. UPPER PRIMARY SCHOOL INYARA FANTA (410058)">BDR84 GOVT. UPPER PRIMARY SCHOOL INYARA FANTA (410058)</option>
+                        <option value="BDR86 GOVT. PRIMARY SCHOOL BHOJANA TAL (410187)">BDR86 GOVT. PRIMARY SCHOOL BHOJANA TAL (410187)</option>
+                        <option value="BDR87 GOVT. GIRLS SENIOR SECONDARY SCHOOL AMARSAR (410247)">BDR87 GOVT. GIRLS SENIOR SECONDARY SCHOOL AMARSAR (410247)</option>
+                        <option value="BDR88 GOVT. PRIMARY SCHOOL BENATHA UMJI (410444)">BDR88 GOVT. PRIMARY SCHOOL BENATHA UMJI (410444)</option>
+                        <option value="BDR89 GOVT. PRIMARY SCHOOL DHADHERU GODARAN (410449)">BDR89 GOVT. PRIMARY SCHOOL DHADHERU GODARAN (410449)</option>
+                        <option value="BDR90 MAHATMA GANDHI GOVT. SCHOOL NAVIN LUHARA (410485)">BDR90 MAHATMA GANDHI GOVT. SCHOOL NAVIN LUHARA (410485)</option>
+                        <option value="BDR91 GOVT. SENIOR SECONDARY SCHOOL SONIYASAR SUKHRAM (415810)">BDR91 GOVT. SENIOR SECONDARY SCHOOL SONIYASAR SUKHRAM (415810)</option>
+                        <option value="BDR92 GOVT. PRIMARY SCHOOL RAMSAGAR (415811)">BDR92 GOVT. PRIMARY SCHOOL RAMSAGAR (415811)</option>
+                        <option value="BDR94 GOVT. PRIMARY SCHOOL AAKANADI SARANGSAR (462292)">BDR94 GOVT. PRIMARY SCHOOL AAKANADI SARANGSAR (462292)</option>
+                        <option value="BDR95 GOVT. GIRLS SENIOR SECONDARY SCHOOL BUS STAND PAREWARA (465050)">BDR95 GOVT. GIRLS SENIOR SECONDARY SCHOOL BUS STAND PAREWARA (465050)</option>
+                        <option value="BDR96 GOVT. UPPER PRIMARY SCHOOL ASARASAR (465061)">BDR96 GOVT. UPPER PRIMARY SCHOOL ASARASAR (465061)</option>
+                        <option value="BDR97 GOVT. SENIOR SECONDARY SCHOOL RAMDEVARA (465062)">BDR97 GOVT. SENIOR SECONDARY SCHOOL RAMDEVARA (465062)</option>
+                        <option value="BDR98 GOVT. PRIMARY SCHOOL PALAS (465086)">BDR98 GOVT. PRIMARY SCHOOL PALAS (465086)</option>
+                        <option value="BDR99 GOVT. PRIMARY SCHOOL CHAK PALAS (465100)">BDR99 GOVT. PRIMARY SCHOOL CHAK PALAS (465100)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="panNumber">PAN NUMBER:</label>
+                    <input type="text" id="panNumber" name="panNumber" pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}" placeholder="e.g., ABCDE1234F">
+                </div>
+                <div class="form-group">
+                    <label for="sbiAccountNo">SBI ACCOUNT NO.:</label>
+                    <input type="text" id="sbiAccountNo" name="sbiAccountNo">
+                </div>
+                <div class="form-group">
+                    <label for="salary">SALARY:</label>
+                    <select id="salary" name="salary">
+                        <option value="">Select</option>
+                        <option value="8000">8000</option>
+                        <option value="9000">9000</option>
+                        <option value="10000">10000</option>
+                        <option value="12000">12000</option>
+                        <option value="15000">15000</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="aadharNumber">AADHAR NUMBER:</label>
+                    <input type="text" id="aadharNumber" name="aadharNumber" pattern="[0-9]{12}" placeholder="e.g., 123456789012">
+                </div>
+                <div class="form-group">
+                    <label for="dob">DATE OF BIRTH:</label>
+                    <input type="date" id="dob" name="dob">
+                </div>
+                <div class="form-group">
+                    <label for="gender">GENDER:</label>
+                    <select id="gender" name="gender">
+                        <option value="">Select</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="category">CATEGORY:</label>
+                    <input type="text" id="category" name="category">
+                </div>
+                <div class="form-group">
+                    <label for="whatsappMobile">WHATSAPP MOBILE NO.:</label>
+                    <input type="tel" id="whatsappMobile" name="whatsappMobile" pattern="[0-9]{10}" placeholder="e.g., 9876543210">
+                </div>
+                <div class="form-group">
+                    <label for="email">EMAIL ADDRESS:</label>
+                    <input type="email" id="email" name="email">
+                </div>
+                <div class="form-group">
+                    <label for="doj">DOJ:</label>
+                    <input type="date" id="doj" name="doj">
+                </div>
+                <div class="form-group">
+                    <label for="dop">DOP:</label>
+                    <input type="date" id="dop" name="dop">
+                </div>
+                <div class="form-group">
+                    <label for="dot">DOT:</label>
+                    <input type="date" id="dot" name="dot">
+                </div>
+                <div class="form-group">
+                    <label for="leftRemoveTransFrom">LEFT/REMOVE / TRANS FROM:</label>
+                    <input type="text" id="leftRemoveTransFrom" name="leftRemoveTransFrom">
+                </div>
+                <div class="form-group">
+                    <label for="transferDate">DATE (for Left/Remove/Trans From):</label>
+                    <input type="date" id="transferDate" name="transferDate">
+                </div>
+                <div class="form-group">
+                    <label for="remark">REMARK:</label>
+                    <textarea id="remark" name="remark" rows="2"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="schoolVillage">SCHOOL VILLAGE:</label>
+                    <input type="text" id="schoolVillage" name="schoolVillage">
+                </div>
+                <div class="form-group">
+                    <label for="address">ADDRESS:</label>
+                    <textarea id="address" name="address" rows="2"></textarea>
+                </div>
+
+                <div class="button-group col-span-full">
+                    <button type="submit" class="action-button submit-button">Add/Update Entry</button>
+                    <button type="button" class="action-button clear-form-button" onclick="clearForm()">Clear Form</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Get references to the form
+        const volunteerForm = document.getElementById('volunteerForm');
+        const searchSrNumberInput = document.getElementById('searchSrNumber');
+        const rowIndexToUpdateInput = document.getElementById('rowIndexToUpdate');
+
+        /**
+         * Clears all input fields in the volunteer form and resets the update index.
+         */
+        function clearForm() {
+            volunteerForm.reset(); // Resets all form fields to their initial state
+            rowIndexToUpdateInput.value = ''; // Clear the stored row index
+            searchSrNumberInput.value = ''; // Clear search field
+            console.log('Form cleared.');
+        }
+
+        /**
+         * Populates the form fields with data from a given row.
+         * @param {Array} rowData - An array of data representing a row from the sheet.
+         */
+        function populateForm(rowData) {
+            // Ensure the order matches the headers in Code.gs and the data collection in submit handler
+            // Note: rowData[0] is the SR Number, which is not a form input for submission
+            document.getElementById('name').value = rowData[1] || '';
+            document.getElementById('fathersName').value = rowData[2] || '';
+            document.getElementById('status').value = rowData[3] || '';
+            document.getElementById('level').value = rowData[4] || '';
+            document.getElementById('subject').value = rowData[5] || '';
+            document.getElementById('workingSchool').value = rowData[6] || '';
+            document.getElementById('panNumber').value = rowData[7] || '';
+            document.getElementById('sbiAccountNo').value = rowData[8] || '';
+            document.getElementById('salary').value = rowData[9] || '';
+            document.getElementById('aadharNumber').value = rowData[10] || ''; 
+            document.getElementById('dob').value = rowData[11] ? new Date(rowData[11]).toISOString().split('T')[0] : ''; // Format date
+            document.getElementById('gender').value = rowData[12] || '';
+            document.getElementById('category').value = rowData[13] || '';
+            document.getElementById('whatsappMobile').value = rowData[14] || '';
+            document.getElementById('email').value = rowData[15] || '';
+            document.getElementById('doj').value = rowData[16] ? new Date(rowData[16]).toISOString().split('T')[0] : ''; // Format date
+            document.getElementById('dop').value = rowData[17] ? new Date(rowData[17]).toISOString().split('T')[0] : ''; // Format date
+            document.getElementById('dot').value = rowData[18] ? new Date(rowData[18]).toISOString().split('T')[0] : ''; // Format date
+            document.getElementById('leftRemoveTransFrom').value = rowData[19] || '';
+            document.getElementById('transferDate').value = rowData[20] ? new Date(rowData[20]).toISOString().split('T')[0] : ''; // Format date
+            document.getElementById('remark').value = rowData[21] || '';
+            document.getElementById('schoolVillage').value = rowData[22] || '';
+            document.getElementById('address').value = rowData[23] || '';
+        }
+
+
+        /**
+         * Pulls data from the sheet based on the SR Number entered in the search field.
+         */
+        function pullData() {
+            const srNumber = searchSrNumberInput.value.trim();
+            if (!srNumber) {
+                alert('Please enter an SR Number to pull data.');
+                return;
+            }
+
+            google.script.run
+                .withSuccessHandler(function(result) {
+                    if (result && result.row) {
+                        populateForm(result.row);
+                        rowIndexToUpdateInput.value = result.rowIndex; // Store the row index for updates
+                        alert('Entry loaded successfully!');
+                    } else {
+                        alert('No entry found for SR Number: ' + srNumber);
+                        clearForm(); // Clear form if no entry found
+                    }
+                })
+                .withFailureHandler(function(error) {
+                    alert('Error pulling entry: ' + error.message);
+                    console.error('Error:', error);
+                })
+                .loadEntryBySrNumber(srNumber);
+        }
+
+        /**
+         * Removes an entry from the sheet based on the SR Number in the search field.
+         */
+        function removeEntry() {
+            const srNumber = searchSrNumberInput.value.trim();
+            if (!srNumber) {
+                alert('Please enter an SR Number to remove an entry.');
+                return;
+            }
+
+            if (!confirm('Are you sure you want to remove the entry with SR Number: ' + srNumber + '?')) {
+                return; // User cancelled
+            }
+
+            google.script.run
+                .withSuccessHandler(function(status) {
+                    if (status === "success") {
+                        alert('Entry removed successfully!');
+                        clearForm(); // Clear form after removal
+                    } else if (status === "not_found") {
+                        alert('No entry found for SR Number: ' + srNumber + '. Nothing was removed.');
+                    } else {
+                        alert('Failed to remove entry.');
+                    }
+                })
+                .withFailureHandler(function(error) {
+                    alert('Error removing entry: ' + error.message);
+                    console.error('Error:', error);
+                })
+                .removeEntryBySrNumber(srNumber);
+        }
+
+        /**
+         * Handles the form submission, collects data, sends it to Apps Script, and clears the form.
+         * It will either append a new row or update an existing one.
+         * @param {Event} event - The form submission event.
+         */
+        volunteerForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission (page reload)
+
+            // Collect data from each input field in the order they should appear in the sheet
+            // Note: SR Number is handled by the script for new entries or pulled for updates
+            const data = {
+                name: document.getElementById('name').value,
+                fathersName: document.getElementById('fathersName').value,
+                status: document.getElementById('status').value,
+                level: document.getElementById('level').value,
+                subject: document.getElementById('subject').value,
+                workingSchool: document.getElementById('workingSchool').value,
+                panNumber: document.getElementById('panNumber').value,
+                sbiAccountNo: document.getElementById('sbiAccountNo').value,
+                salary: document.getElementById('salary').value,
+                aadharNumber: document.getElementById('aadharNumber').value,
+                dob: document.getElementById('dob').value,
+                gender: document.getElementById('gender').value,
+                category: document.getElementById('category').value,
+                whatsappMobile: document.getElementById('whatsappMobile').value,
+                email: document.getElementById('email').value,
+                doj: document.getElementById('doj').value,
+                dop: document.getElementById('dop').value,
+                dot: document.getElementById('dot').value,
+                leftRemoveTransFrom: document.getElementById('leftRemoveTransFrom').value,
+                transferDate: document.getElementById('transferDate').value,
+                remark: document.getElementById('remark').value,
+                schoolVillage: document.getElementById('schoolVillage').value,
+                address: document.getElementById('address').value
+            };
+
+            // This rowData array needs to be carefully ordered to match the headers in Code.gs
+            // SR Number (index 0) will be prepended by GS for new entries, or used from loaded data for updates
+            const rowData = [
+                data.name,
+                data.fathersName,
+                data.status,
+                data.level,
+                data.subject,
+                data.workingSchool,
+                data.panNumber,
+                data.sbiAccountNo,
+                data.salary,
+                data.aadharNumber,
+                data.dob,
+                data.gender,
+                data.category,
+                data.whatsappMobile,
+                data.email,
+                data.doj,
+                data.dop,
+                data.dot,
+                data.leftRemoveTransFrom,
+                data.transferDate,
+                data.remark,
+                data.schoolVillage,
+                data.address
+            ];
+
+            const rowIndex = rowIndexToUpdateInput.value;
+
+            if (rowIndex) {
+                // If rowIndex is present, it's an update operation
+                google.script.run
+                    .withSuccessHandler(function(status) {
+                        if (status === "success") {
+                            alert('Entry updated successfully!');
+                            clearForm();
+                        } else {
+                            alert('Failed to update entry.');
+                        }
+                    })
+                    .withFailureHandler(function(error) {
+                        alert('Error updating entry: ' + error.message);
+                        console.error('Error:', error);
+                    })
+                    .updateRowInSheet(parseInt(rowIndex), rowData); // Pass row index and data
+            } else {
+                // Otherwise, it's a new entry operation
+                google.script.run
+                    .withSuccessHandler(function(status) {
+                        if (status === "success") {
+                            alert('Entry added successfully!');
+                            clearForm();
+                        } else if (status === "empty_row") {
+                            alert('Please fill in at least one field before adding an entry.');
+                        }
+                    })
+                    .withFailureHandler(function(error) {
+                        alert('Error adding entry: ' + error.message);
+                        console.error('Error:', error);
+                    })
+                    .appendRowToSheet(rowData); // Pass only data for new entry
+            }
+
+            console.log('Sending data to Google Sheet:', data);
+        });
+
+        console.log("Data entry sheet script loaded for Google Sheets.");
+    </script>
+</body>
+</html>
